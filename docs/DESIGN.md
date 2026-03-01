@@ -22,13 +22,12 @@ for execution, following the standard GitHub Actions pattern.
 | Input     | Required | Default    | Description |
 |-----------|----------|------------|-------------|
 | `channel` | No       | `"stable"` | Flutter release channel: `stable`, `beta`, or `main`. |
-| `version` | No       | —          | Specific Flutter version, e.g. `3.19.6`. When provided, `channel` is ignored. |
+| `version` | No       | —          | Flutter version or prefix, e.g. `3.19.6` or `3.19` (resolves to the latest `3.19.x` stable release). Overrides `channel`. |
 
-At least one of `channel` or `version` must produce a resolvable SDK. If both
-are omitted, the action defaults to the latest `stable` release.
+If both are omitted, the action defaults to the latest `stable` release.
 
-**Future (not in v1):** support partial versions like `3.19`, resolving to the
-latest patch release in that minor series.
+Partial version prefixes (e.g. `3.19`) are intended for use with stable
+releases. Behavior with beta or main channel releases is unspecified.
 
 ## Outputs
 
@@ -72,7 +71,8 @@ The manifest structure is:
 
 1. Fetch the releases manifest for the current OS.
 2. If `version` is specified, find the release entry whose `version` field
-   matches exactly.
+   matches exactly, or find all releases whose `version` starts with the given
+   prefix and pick the highest one.
 3. If `channel` is specified (or defaulted), use `current_release[channel]` to
    get the hash of the latest release on that channel, then look up that hash in
    the `releases` array to get the version string and archive URL.
@@ -86,9 +86,14 @@ URL construction guesswork.
 Caching is handled transparently using `@actions/cache`. Users do not need to
 add a separate cache step.
 
-**Cache key:** `setup-flutter-<os>-<resolved-version>`
+**Cache key:** `setup-flutter-<os>[-<arch>]-<resolved-version>`
 
-Example: `setup-flutter-linux-3.19.6`
+| Platform | Cache key |
+|----------|-----------|
+| Linux | `setup-flutter-linux-<version>` |
+| macOS (Apple Silicon) | `setup-flutter-macos-arm64-<version>` |
+| macOS (Intel) | `setup-flutter-macos-x64-<version>` |
+| Windows | `setup-flutter-windows-<version>` |
 
 **Cache path:** the directory containing the extracted Flutter SDK
 (e.g. `$RUNNER_TOOL_CACHE/flutter/<version>/`).
@@ -105,20 +110,29 @@ keep logs clean.
 Archives are downloaded from `storage.googleapis.com` using the URL provided
 directly in the releases manifest.
 
-Flutter provides archives in both `.zip` and `.tar.xz` format. The action will
-use whichever format provides the best balance of download size and extraction
-speed for each platform (to be determined by benchmarking during implementation;
-initial Linux implementation will use `.tar.xz`).
+- **Linux:** `.tar.xz` archive, extracted with `tar xJ`
+- **macOS / Windows:** `.zip` archive, extracted with the platform unzip utility
+
+On macOS, the manifest contains separate entries for Apple Silicon (`arm64`) and
+Intel (`x64`). The action detects the runner architecture and selects the
+correct archive automatically.
 
 Extraction is handled by `@actions/tool-cache` utilities (`extractZip` /
 `extractTar`).
 
+## Pub Cache
+
+The action sets `PUB_CACHE` to `~/.pub-cache` and adds `~/.pub-cache/bin` to
+`PATH`. This ensures a consistent pub cache location across all platforms and
+makes globally-activated Dart tools (e.g. `dart pub global activate`) available
+without extra configuration.
+
+Pub package caching (caching the contents of `PUB_CACHE` between runs) is not
+currently implemented. See issue #14.
+
 ## Platform Support
 
-**v1:** Linux only (`ubuntu-*` runners).
-
-**Future:** macOS and Windows support, using platform-appropriate archive
-formats and path handling.
+Linux, macOS (Apple Silicon and Intel), and Windows are all supported.
 
 ## Implementation Language & Build
 
@@ -141,35 +155,14 @@ setup-flutter-action/
 │   └── index.ts        # Main action logic
 ├── dist/
 │   └── index.js        # Compiled + bundled output (committed to repo)
+├── docs/
+│   ├── DESIGN.md       # Design rationale and architecture
+│   └── PLAN.md         # Implementation history
 ├── .github/
 │   └── workflows/
 │       ├── ci.yml      # Build, lint, test on PRs
 │       └── smoke.yml   # End-to-end test: run the action itself
 ├── package.json
 ├── tsconfig.json
-├── DESIGN.md
 └── README.md
-```
-
-## action.yml
-
-```yaml
-name: 'Setup Flutter Action'
-description: 'A GitHub action to install the Flutter SDK'
-inputs:
-  channel:
-    description: 'Flutter release channel (stable, beta, main)'
-    required: false
-    default: 'stable'
-  version:
-    description: 'Specific Flutter version (e.g. 3.19.6); overrides channel'
-    required: false
-runs:
-  using: node20
-  main: dist/index.js
-outputs:
-  flutter-version:
-    description: 'The resolved Flutter SDK version'
-  flutter-root:
-    description: 'Path to the Flutter SDK root directory'
 ```
