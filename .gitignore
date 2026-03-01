@@ -12,3 +12,4 @@ dist/*
 *.tsbuildinfo
 .eslintcache
 coverage/
+.claude/settings.local.json
