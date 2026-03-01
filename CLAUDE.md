@@ -6,7 +6,7 @@ This file provides guidance for AI assistants working in this repository.
 
 `setup-flutter-action` is a GitHub Action that installs and caches the Flutter SDK.
 It is written in TypeScript and compiled to `dist/index.js` for execution.
-See `DESIGN.md` for full design rationale and architecture.
+See `docs/DESIGN.md` for full design rationale and architecture.
 
 ## Key Design Principles
 
@@ -26,7 +26,7 @@ action.yml        # Action metadata
 
 ## Contributing
 
-- Keep CLAUDE.md and DESIGN.md up-to-date as the app design evolves
+- Keep CLAUDE.md and docs/DESIGN.md up-to-date as the app design evolves
 - The project uses git and is hosted on GitHub
 - The project uses GitHub Actions for its CI
 - Work should only be done in PRs
@@ -101,6 +101,5 @@ where `<os>` is `linux`, `macos`, or `windows`.
 
 ## What's Out of Scope (for now)
 
-- Partial version matching (e.g. `3.19` → latest `3.19.x`)
-- Pub cache caching
+- Pub cache caching (tracked in issue #14)
 - Any inputs beyond `channel` and `version`
