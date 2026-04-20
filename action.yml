@@ -1,5 +1,5 @@
-name: 'Setup Flutter Action'
-description: 'A GitHub action to install the Flutter SDK.'
+name: "Setup Flutter Action"
+description: "A GitHub action to install the Flutter SDK."
 
 branding:
   color: blue
@@ -7,19 +7,20 @@ branding:
 
 inputs:
   channel:
-    description: 'A Flutter release channel (stable, beta, main)'
+    description: "A Flutter release channel (stable, beta, main)"
     required: false
-    default: 'stable'
+    default: "stable"
   version:
-    description: 'A Flutter version or prefix, e.g. 3.19.6 or 3.19 (this overrides channel)'
+    description:
+      "A Flutter version or prefix, e.g. 3.19.6 or 3.19 (this overrides channel)"
     required: false
 
 runs:
-  using: node20
+  using: node24
   main: dist/index.js
 
 outputs:
   flutter-version:
-    description: 'The resolved Flutter SDK version'
+    description: "The resolved Flutter SDK version"
   flutter-root:
-    description: 'The path to the Flutter SDK root directory'
+    description: "The path to the Flutter SDK root directory"

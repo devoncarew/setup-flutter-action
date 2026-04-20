@@ -1,3 +1,8 @@
+## 1.0.2
+
+- Move to using node24.
+- Update dependencies to the latest and recompile the action.
+
 ## 1.0.1
 
 - Update dependencies to the latest and recompile the action.
