@@ -19,9 +19,9 @@ for execution, following the standard GitHub Actions pattern.
 
 ## Inputs
 
-| Input     | Required | Default    | Description |
-|-----------|----------|------------|-------------|
-| `channel` | No       | `"stable"` | Flutter release channel: `stable`, `beta`, or `main`. |
+| Input     | Required | Default    | Description                                                                                                               |
+| --------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `channel` | No       | `"stable"` | Flutter release channel: `stable`, `beta`, or `main`.                                                                     |
 | `version` | No       | —          | Flutter version or prefix, e.g. `3.19.6` or `3.19` (resolves to the latest `3.19.x` stable release). Overrides `channel`. |
 
 If both are omitted, the action defaults to the latest `stable` release.
@@ -31,10 +31,10 @@ releases. Behavior with beta or main channel releases is unspecified.
 
 ## Outputs
 
-| Output           | Description |
-|------------------|-------------|
+| Output            | Description                                               |
+| ----------------- | --------------------------------------------------------- |
 | `flutter-version` | The fully resolved Flutter version string, e.g. `3.19.6`. |
-| `flutter-root`    | Absolute path to the Flutter SDK root directory. |
+| `flutter-root`    | Absolute path to the Flutter SDK root directory.          |
 
 `flutter` and `dart` are both added to `PATH` via Flutter's `bin/` directory.
 
@@ -88,12 +88,12 @@ add a separate cache step.
 
 **Cache key:** `setup-flutter-<os>[-<arch>]-<resolved-version>`
 
-| Platform | Cache key |
-|----------|-----------|
-| Linux | `setup-flutter-linux-<version>` |
+| Platform              | Cache key                             |
+| --------------------- | ------------------------------------- |
+| Linux                 | `setup-flutter-linux-<version>`       |
 | macOS (Apple Silicon) | `setup-flutter-macos-arm64-<version>` |
-| macOS (Intel) | `setup-flutter-macos-x64-<version>` |
-| Windows | `setup-flutter-windows-<version>` |
+| macOS (Intel)         | `setup-flutter-macos-x64-<version>`   |
+| Windows               | `setup-flutter-windows-<version>`     |
 
 **Cache path:** the directory containing the extracted Flutter SDK
 (e.g. `$RUNNER_TOOL_CACHE/flutter/<version>/`).
@@ -137,7 +137,7 @@ Linux, macOS (Apple Silicon and Intel), and Windows are all supported.
 ## Implementation Language & Build
 
 - **Language:** TypeScript
-- **Runtime:** Node.js 20 (per `action.yml` `using: node20`)
+- **Runtime:** Node.js 24 (per `action.yml` `using: node24`)
 - **Entry point:** `dist/index.js` (compiled from `src/index.ts`)
 - **Build:** `tsc` + `ncc` to bundle into a single file with dependencies
 - **Key dependencies:**

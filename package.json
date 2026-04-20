@@ -1,6 +1,6 @@
 {
   "name": "setup-flutter-action",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A GitHub action to install the Flutter SDK.",
   "scripts": {
     "build": "tsc --noEmit && esbuild src/index.ts --bundle --platform=node --format=cjs --outfile=dist/index.js --minify",
@@ -28,7 +28,12 @@
   },
   "jest": {
     "transform": {
-      "^.+\\.ts$": ["ts-jest", {"tsconfig": "tsconfig.test.json"}]
+      "^.+\\.ts$": [
+        "ts-jest",
+        {
+          "tsconfig": "tsconfig.test.json"
+        }
+      ]
     },
     "testEnvironment": "node",
     "testMatch": [
