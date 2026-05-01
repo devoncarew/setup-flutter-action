@@ -9,22 +9,22 @@
   },
   "dependencies": {
     "@actions/cache": "^6.0.0",
-    "@actions/core": "^3.0.0",
-    "@actions/http-client": "^4.0.0",
+    "@actions/core": "^3.0.1",
+    "@actions/http-client": "^4.0.1",
     "@actions/tool-cache": "^4.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.3.3",
-    "@typescript-eslint/eslint-plugin": "^8.56.1",
+    "@typescript-eslint/eslint-plugin": "^8.59.1",
     "@typescript-eslint/parser": "^8.56.1",
-    "esbuild": "^0.27.3",
+    "esbuild": "^0.28.0",
     "eslint": "^10.0.2",
     "globals": "^17.4.0",
     "jest": "^30.2.0",
     "ts-jest": "^29.1.5",
-    "typescript": "^5.5.2"
+    "typescript": "^6.0.3"
   },
   "jest": {
     "transform": {
